@@ -16,15 +16,15 @@ ARG BASE_VERSION
 ENV APP_VERSION=${BASE_VERSION:-v1}
 
 # Instalacja Node.js oraz npm z pakietów apk i usunięcie cache
-# zainstaluj klienta open-ssh i git
-# pobierz klucz publiczny, uruchom agenta ssh
+# Instalacja klienta Open-SSH i GIT bez cache
+# Pobranie klucza publicznego dla GitHuba, uruchomienie usługi SSH
 RUN apk add --update nodejs npm && rm -rf /var/cache/apk/* && apk add --no-cache openssh-client git \
 && mkdir -p -m 0700 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts && eval $(ssh-agent)
 
 # Ustawienie katalogu roboczego na /usr/app
 WORKDIR /usr/app
 
-# skonluj repozytorium
+# Sklonowanie repozytorium
 RUN --mount=type=ssh git clone git@github.com:97703/pawcho6.git pawcho6
 
 # Kopiowanie pliku package.json i index.js do obrazu
